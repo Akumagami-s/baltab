@@ -36,6 +36,7 @@ class Kernel extends HttpKernel
             // \Illuminate\Session\Middleware\AuthenticateSession::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
+            \RealRashid\SweetAlert\ToSweetAlert::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
 
@@ -54,7 +55,11 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
+
+
         'auth' => \App\Http\Middleware\Authenticate::class,
+        'logoutus' => \App\Http\Middleware\logoutus::class,
+        'apiSpecial' => \App\Http\Middleware\apiSpecial::class,
         'ssocheck' => \App\Http\Middleware\ssocheck::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,

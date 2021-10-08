@@ -1,0 +1,322 @@
+  public function agus()
+    {
+        $user=DB::table('datapokok')->where('nrp', '3900152380269')->first();
+        $tmt_1 = $user->tmt_1 == '000000' ? '' : $user->tmt_1;
+        $tmt_2 = $user->tmt_2 == '000000' ? '' : $user->tmt_2;
+        $tmt_3 = $user->tmt_3 == '000000' ? '' : $user->tmt_3;
+        $tmt_4 = $user->tmt_4 == '000000' ? '' : $user->tmt_4;
+        $tmt_5 = $user->tmt_5 == '000000' ? '' : $user->tmt_5;
+        $pangkat=[$tmt_1,$tmt_2,$tmt_3,$tmt_4,$tmt_5,$user->tmt_kenti];
+        foreach ($pangkat as $key => $value) {
+            if ($value==null) {
+                unset($pangkat[$key]);
+            }
+        }
+        $pangkat=array_values($pangkat);
+        $bunga_list = [];
+        foreach (DB::table('bungas')->get() as $key => $value) {
+            $bunga_list[$value->period] = $value->value;
+        }
+
+        $dt1 = explode("-", $user->tmt_1);
+        $dat1 = $dt1[0]."-".$dt1[1]."-01";
+
+        $dt2 = explode("-", $user->tmt_henti);
+        $akh = $dt2[1]+1;
+        $dat2 = $dt2[0]."-0".$akh."-01";
+
+        $date1 = date_create($dat1);
+        $date2 = date_create($dat2);
+        $interval = $date1->diff($date2);
+        $all = $interval->m + $interval->y * 12;
+        $bunga = 10;
+        // dd($all);
+        $potongan = DB::table('potongans')->where('period', "<=", $dt1[0]."-".$dt1[1])->first()->value;
+        $jml_tabungan = 0;
+        $bunga_bulanan = 0;
+        $bunga_arr = [];
+        $tab_arr = [];
+        $pangkat = '';
+        $arr_pangkat = [];
+        $pangkat_list = [];
+
+        $dt = strtotime($dt1[0].'-'.$dt1[1]);
+        echo "<pre>";
+
+        for ($i=0; $i < $all; $i++) {
+            if ($i == 0) {
+                $jml_tabungan += $potongan;
+            } else {
+                $dn = date("Y-m", strtotime("+1 month", $dt));
+
+                switch ($dn) {
+            case substr($user->tmt_1, 0, 7):
+                $pangkat = 'tamtama';
+                break;
+            case substr($user->tmt_2, 0, 7):
+                $pangkat = 'bintara';
+                break;
+            case substr($user->tmt_3, 0, 7):
+                $pangkat = 'pama';
+                break;
+            case substr($user->tmt_4, 0, 7):
+                $pangkat = 'pamen';
+                break;
+            case substr($user->tmt_5, 0, 7):
+                $pangkat = 'pati';
+                break;
+        }
+                // dump("pada tanggal ".$dn." pangkatnya ".$pangkat);
+
+                if ($dn == "2009-04" || $dn == "2017-01") {
+                    $potongan = $this->loadPeriod($dn, $pangkat);
+                    $tab_arr[] = $jml_tabungan - array_sum($bunga_arr) - array_sum($tab_arr);
+                } elseif (!in_array($pangkat, $pangkat_list)) {
+                    if ($this->loadPeriod($dn, $pangkat) != 0) {
+                        dump('ini pindah '.$pangkat);
+                        $potongan = $this->loadPeriod($dn, $pangkat);
+                        $pangkat_list[] = $pangkat;
+                        $tab_arr[] = $jml_tabungan - array_sum($bunga_arr) - array_sum($tab_arr);
+                    }
+                }
+                // dump("pada tanggal ".$dn." pangkatnya ".$pangkat." potongannya ".$potongan);
+                $bunga_bulanan = number_format(($jml_tabungan * ($bunga) / 12/100), 2, '.', '');
+                $jml_tabungan = number_format(($jml_tabungan + ($jml_tabungan * ($bunga) / 12/100) + $potongan), 2, '.', '');
+                $bunga_arr[] = (float) $bunga_bulanan;
+
+                try {
+                    if (!is_null($bunga_list[$dn])) {
+                        $bunga = $bunga_list[$dn];
+                    }
+                } catch (\Throwable $th) {
+                    //throw $th;
+                }
+                $dt = strtotime($dn);
+            }
+        }
+        $tab_arr[] = $jml_tabungan - array_sum($bunga_arr) - array_sum($tab_arr);
+
+        dump($tab_arr);
+        dump($jml_tabungan);
+        die;
+    }
+}
+
+
+
+
+
+        // $tmtrange=[$user->tmt_1,$user->tmt_2,$user->tmt_3,$user->tmt_4,$user->tmt_5,$user->tmt_henti];
+        // $pangkat=['tamtama','bintara','pama', 'pamen','pati','henti'];
+        // $potongan_list = [];
+        // $hist = [];
+
+
+        // foreach ($tmtrange as $key=>$val) {
+        //     if (empty($val)) {
+        //         unset($tmtrange[$key]);
+        //     }
+        // }
+        // $in = 0;
+        // dd($tmtrange);
+        // foreach ($tmtrange as $key =>$val) {
+        //     if ($in ==  count($tmtrange) - 1) {
+        //         break;
+        //     }
+        //     $val = explode('-',$val);
+        //     $x = DB::table('potongans')->where('period',"<=",$val[0]."-".$val[1])->orderBy('period', 'DESC')->first();
+        //     if (!in_array($x->value,$hist)) {
+        //         var_dump(DB::table('potongans')->where('period',"<=",$val[0]."-".$val[1])->where('pangkat',$pangkat[$key])->first()->value);
+
+        //         $potongan_list[$val[0]."-".$val[1]] = $x->value;
+        //         $hist[] = $x->value;
+        //     }
+        //     $in += 1;
+
+
+        // }
+
+        // dd($potongan_list);
+
+
+
+
+
+
+
+
+
+    public function masle()
+    {
+
+                // credintian
+        // $user=DB::table('datapokok')->where('nrp', '3900152380269')->first();
+        $user=DB::table('datapokok')->where('nrp', '3900152380269')->first();
+        $potongan=[];
+        $bulan=[];
+        $totalbulan=[];
+        $replace=[];
+        $bungas=[];
+        $panggkatbin=[];
+        $total=[];
+        $totalbunga=[];
+        $ig=0;
+        $fragmentd=[];
+        $tasl=0;
+
+        //reduce
+        $tmtrange=[$user->tmt_1,$user->tmt_2,$user->tmt_3,$user->tmt_4,$user->tmt_5,$user->tmt_henti];
+        $pangkat=['tamtama','bintara','pama', 'pamen','pati','henti'];
+
+        foreach ($tmtrange as $key=>$dam) {
+            if (empty($dam)) {
+                unset($tmtrange[$key]);
+            } else {
+                $panggkatbin[$key]=$pangkat[$key];
+            }
+        }
+        // dd($panggkatbin);
+        $tmtrange=array_values($tmtrange);
+        $panggkatbin=array_values($panggkatbin);
+        // dd($tmtrange,$panggkatbin);
+        foreach ($tmtrange as $key=>$dam) {
+            if ($dam==end($tmtrange)) {
+            } else {
+                $diff = date_diff(date_create($dam), date_create($tmtrange[$key+1]));
+                $masnas=($diff->y*12)+$diff->m+1;
+                // $masnas=($diff->days/30)+1;
+                $bulan[$key]=floor($masnas);
+                $totalbulan[$key]['total']=floor($masnas);
+                $totalbulan[$key]['awal']=$dam;
+                $totalbulan[$key]['akhir']=$tmtrange[$key+1];
+            }
+        }
+        // dd($masnas)
+        // dd($totalbulan);
+        // dd($bulan);
+        $dira=[];
+        $nase=[];
+        foreach ($bulan as $key => $value) {
+            $mucal=0;
+            $las='';
+            // dump($value);
+            // dump($tmtrange[$key+1]);
+            for ($i=0; $i < $value ; $i++) {
+                $das=$this->masn($tmtrange[$key], $i, 'mount');
+
+                // dd($i,$key);
+                //index bulan
+                $dira[$key][$i]=$das;
+                //potongan
+                if ($das<=$tmtrange[$key+1]) {
+                    $replace[$key][$i]=DB::table('potongans')
+                                                        ->where('period', '<=', $das)
+                                                        ->where('pangkat', '*')
+                                                        ->orderBy('period', 'desc')->first();
+                    if (empty($replace[$key][$i])) {
+                        $replace[$key][$i]=DB::table('potongans')
+                                                        ->where('period', '<=', $das)
+                                                        ->where('pangkat', $panggkatbin[$key])
+                                                        ->orderBy('period', 'desc')->first();
+                    } elseif (empty($replace[$key][$i])) {
+                        $replace[$key][$i]=DB::table('potongans')
+                                                        // ->where('period','<=',$das)
+                                                        ->where('pangkat', $panggkatbin[$key])
+                                                        ->orderBy('period', 'asc')->first();
+                    }
+                    //bunga
+                    $bungas[$key][$i]=DB::table('bungas')
+                                                        ->where('period', '<=', $das)
+                                                        // ->where('pangkat','*')
+                                                        ->orderBy('period', 'desc')->first();
+                    if (empty($bungas[$key][$i])) {
+                        $bungas[$key][$i]=DB::table('bungas')
+                                                        ->where('period', '<=', $das)
+                                                        // ->where('pangkat',$panggkatbin[$key])
+                                                        ->orderBy('period', 'asc')->first();
+                    }
+
+                    $dma=$bungas[$key][$i]->value;
+                    $replace[$key][$i]=$replace[$key][$i]->value;
+                    $totalbulan[$key]['potongan']=$replace[$key][$i];
+                    $bungas[$key][$i]=($replace[$key][$i]*$bungas[$key][$i]->value)/100;
+                    $mucal+=$replace[$key][$i];
+                    $las=$das;
+                    // if($nase[$key][$i]){
+
+                    // }
+                    $nase[$key][$i]=$replace[$key][$i];
+                    // $fragmentd[$key][$i]['a']=$bungas[$key][$i];
+                            // $fragmentd[$key][$i]['b']=$replace[$key][$i];
+                            // $fragmentd[$key][$i]['c']=$dam;
+                }
+            }
+            // $da=DB::table('bungas')->where('period', '<=', $las)->orderBy('period', 'desc')->first();
+                    // dd(($mucal));
+        }
+        // dd($fragmentd);
+        foreach ($replace as $key => $value) {
+            foreach ($value as $key2 => $value2) {
+                if ($key2==0) {
+                    $total[$key]=0;
+                    $totalbunga[$key]=0;
+                }
+                // dd($key);
+                $total[$key]=$total[$key]+$value2;
+                $totalbunga[$key]=$totalbunga[$key]+$bungas[$key][$key2];
+                // dd($bungas[$key][$key2]);
+            }
+        }
+
+        foreach ($total as $key => $value) {
+            $ig=$ig+$value+$totalbunga[$key];
+        }
+        // dump($total);
+        // dump($totalbunga);
+        $finbunga=0;
+        $finuang=0;
+        foreach ($totalbunga as $key => $value) {
+            $finbunga=$finbunga+$value;
+        }
+        foreach ($total as $key => $value) {
+            $finuang=$finuang+$value;
+        }
+        foreach ($totalbulan as $key => $value) {
+            $totalbulan[$key]['pangkat']=$panggkatbin[$key];
+            $totalbulan[$key]['total_uang_bulanan']=$total[$key];
+        }
+        // dump($totalbulan);
+        // dump($panggkatbin);
+
+
+        $data=$user;
+        $data->rekap_uang=$totalbulan;
+        $data->data_uang=$finuang+$finbunga;
+        $data->data_bunga=$finbunga;
+
+
+        $dawa=[];
+        foreach ($nase as $key => $value) {
+            $mua='';
+            dump($key);
+            foreach ($value as $key2 => $value2) {
+                if (empty($dawa)) {
+                    $dawa[$key]=$value2;
+                    $mua=$value2;
+                // dd($value2);
+                } else {
+                    if ($value2!=$mua) {
+                        $dawa[$key]['potongan']=$value2;
+                        $dawa[$key]['pada']=$dira[$key][$key2];
+                    }
+                }
+            }
+        }
+        // $data->kelengkapan=$pes;
+        // $this->data_user_pasing=$data;
+        // user biasa
+        dump($dira);
+        dump($dawa);
+        dump($data);
+        // return view('A.user_detail', ['data' => $this->data_user_pasing, 'status'=>$pes]);
+    }

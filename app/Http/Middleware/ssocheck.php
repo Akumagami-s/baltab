@@ -20,6 +20,7 @@ class ssocheck
     public function handle(Request $request, Closure $next)
     {
 
+
         $value = $request->cookie('login');
 
 
@@ -38,7 +39,6 @@ class ssocheck
             if (!Auth::check()) {
                 Auth::loginUsingId($decrypted, true);
             }
-            // dd(Auth::user() );
 
             return $next($request);
             }

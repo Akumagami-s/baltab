@@ -4,7 +4,13 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use App\Models\datapokok;
+use App\Models\Pengajuan;
+use Illuminate\Support\Facades\Log;
 
+
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\CronController;
 class Kernel extends ConsoleKernel
 {
     /**
@@ -24,7 +30,19 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+
+
+
+    $schedule->call(function () {
+        app('App\Http\Controllers\CronController')->profiling();
+
+    })->monthlyOn(2, '02:00');
+
+    $schedule->call(function () {
+        app('App\Http\Controllers\CronController')->validate_profiling();
+
+    })->monthlyOn(2, '05:30');
+
     }
 
     /**
