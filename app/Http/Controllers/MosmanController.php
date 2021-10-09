@@ -10,9 +10,7 @@ class MosmanController extends Controller
 {
     public function index()
     {
-        if (!Auth::user()->role==0) {
-            return redirect('https://asiabytes.tech/baltab/datapok');
-        } else {
+        if (Auth::user()->role==0 || Auth::user()->role == 1) {
             $a=DB::table('datapokok')->where('is_complate', 0)->count();
             $b=DB::table('datapokok')->where('is_complate', 1)->count();
             $data['kelengkapan']=[
@@ -27,6 +25,9 @@ class MosmanController extends Controller
             ];
             $data['alokasi']=array_reverse($this->alokasi());
             return view('welcome', ['data'=>$data]);
+        } else {
+            return redirect('https://asiabytes.tech/baltab/datapok');
+
         }
     }
     private function just()

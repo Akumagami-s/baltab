@@ -57,7 +57,7 @@ transition: 1s;
                                         <input type="checkbox" class="select-all"> All
                                     </th> -->
                                     <th>No</th>
-
+                                    <th>NRP</th>
                                     <th>Nama / NRP</th>
                                     <th>Pangkat</th>
                                     <th>Kesatuan</th>
@@ -65,6 +65,7 @@ transition: 1s;
                                     {{-- <th>Pengangkatan</th> --}}
                                     <th>Tanggal lahir</th>
                                     <th>Action</th>
+
                                 </tr>
                             </thead>
 
@@ -182,11 +183,21 @@ transition: 1s;
                     // },
 
                     {
-                        data: 'nama',
+                        data: 'nrp',
+                        name: 'nrp',
+                        defaultContent: "<i class='text-danger'>null</i>",
+                        className: 'nrp',
+                        visible: false,
+                        searchable: true
+                    },
+
+                    {
+                        data: 'uraian_nama',
                         name: 'nama',
                         defaultContent: "<i class='text-danger'>null</i>",
                         className: 'nama',
-                        visible: true
+                        visible: true,
+                        searchable: true
                     },
                     {
                         data: 'pangkat_uraian',
@@ -229,8 +240,7 @@ transition: 1s;
                         defaultContent: "<i class='text-danger'>null</i>",
                         className: 'action',
                         visible: true,
-                        orderable: false,
-                    searchable: false
+
                     },
 
 

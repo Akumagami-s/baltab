@@ -3,8 +3,22 @@
 @section('css')
     <link rel="stylesheet" href="{{ url('assets/css/pengajuaneBaltab.css') }}">
     <link rel="stylesheet" href="{{ url('assets/css/bootstrapdatatables.min.css') }}">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/rowreorder/1.2.8/css/rowReorder.dataTables.min.css">
 @endsection
 @section('content')
+    <style>
+        .dtr-details li {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .dtr-details {
+            width: 100%;
+        }
+
+    </style>
+
 
     <div class="mainContent">
         <div class="container-fluid">
@@ -17,13 +31,18 @@
                 </div>
                 <div class="tab-content" id="nav-tabContent">
                     <div class="tab-pane fade show active" id="index-tab" role="tabpanel" aria-labelledby="index-tab-menu">
-                       <br>
+                        <br>
                         <h1 class="nameContent" style="margin-bottom: 16px">Pengajuan Data Prajurit</h1>
 
                         <br>
-                        <b><h4>Jumlah Pembayaran : <span style="color:#FF0000;">{{$banyak}}</span></h4></b>
+                        <b>
+                            <h4>Jumlah Pembayaran : <span style="color:#FF0000;">{{ $banyak }}</span></h4>
+                        </b>
                         <br>
-                        <b><h4>Total Dana Pembayaran : <span style="color:#08850D;">Rp.{{number_format($jumlah, 2, ',', '.')}}</span></h4></b>
+                        <b>
+                            <h4>Total Dana Pembayaran : <span
+                                    style="color:#08850D;">Rp.{{ number_format($jumlah, 2, ',', '.') }}</span></h4>
+                        </b>
                         <br>
                         <br>
                         <div class="wrapperTable">
@@ -44,11 +63,11 @@
                             </div>
                             <br>
 
-                            <table id="tablePokokPrajurit" class="table" style="width:100%">
+                            <table id="tablePokokPrajurit" class="table display nowrap" style="width:100%">
                                 <thead class="headTable">
                                     <tr>
 
-                                           <th>No </th>
+                                        <th>No </th>
                                         <th><input type="checkbox" class="select-all"> All</th>
                                         <th>Nama / NRP</th>
 
@@ -130,6 +149,8 @@
     <script src="{{ url('materialadmin/js/libs/toastr/toastr.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/rowreorder/1.2.8/js/dataTables.rowReorder.min.js"></script>
     <script type="text/javascript">
         function addColumnFilter(dt_table) {
             var columns = dt_table.settings().init().columns;
@@ -160,15 +181,49 @@
             });
         }
 
+        //         $('#tablePokokPrajurit').on( 'click', 'tbody .odd', function (e) {
 
+        // var tr =  $(this);
+        // var colsp = 2;
+        // var htm = "";
+
+
+
+
+        // $(this).children().each(function () {
+
+        //     if($(this).css('display') == 'none')
+        // {
+        // colsp += 1;
+
+
+        // htm += '<li><span class="dtr-title">Jumlah tabungan</span> <span class="dtr-data">'+this.innerHTML+'</span></li>';
+        // //   tr.after('<td>Some data here</td>');
+
+        // }
+
+
+        // });
+        // tr.after('<tr class="child">'+'<td class="child" colspan="4"><ul data-dtr-index="0" class="dtr-details">'+htm+'</ul></td>'+'</tr>');
+
+
+        // } );
 
         $(document).ready(function() {
             dt_table = $('#tablePokokPrajurit').DataTable({
                 processing: true,
                 scrollX: true,
                 serverSide: true,
+
                 ajax: "https://asiabytes.tech/baltab/dataPengajuan",
                 pageLength: 25,
+                rowReorder: {
+
+                    selector: 'td:nth-child(2)'
+                },
+
+
+                responsive: true,
                 columns: [
 
                     {
@@ -181,20 +236,20 @@
                         orderable: false,
                         searchable: false
                     },
-                   {
+                    {
                         data: 'nama',
                         name: 'nama',
                         orderable: true,
                         searchable: true
                     },
-                   {
+                    {
                         data: 'nabank',
                         name: 'nabank',
                         orderable: true,
                         searchable: true
                     },
 
-                   {
+                    {
                         data: 'jumlah_tabungan',
                         name: 'jumlah_tabungan',
 
@@ -284,14 +339,19 @@
                                 dt_table.ajax.reload();
                                 $msg = "";
 
-                                for (let i = 0; i < response.err.length + response.succ.length; i++) {
+                                for (let i = 0; i < response.err.length + response.succ
+                                    .length; i++) {
 
                                     if (response.err[i] != null) {
-                                    var element = response.err[i];
-                                    $msg += '<div class="alert alert-danger" role="alert">'+element+'</div>';
+                                        var element = response.err[i];
+                                        $msg +=
+                                            '<div class="alert alert-danger" role="alert">' +
+                                            element + '</div>';
                                     } else {
                                         var element = response.succ[i];
-                                    $msg += '<div class="alert alert-success" role="alert">'+element+'</div>';
+                                        $msg +=
+                                            '<div class="alert alert-success" role="alert">' +
+                                            element + '</div>';
 
                                     }
 
@@ -300,7 +360,7 @@
                                     // position: 'top-end',
                                     icon: 'info',
                                     title: 'Pengajuan yang dipilih telah diproses !',
-                                    html:$msg,
+                                    html: $msg,
                                     showConfirmButton: true,
 
                                 })

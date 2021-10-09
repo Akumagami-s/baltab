@@ -15,17 +15,19 @@
                 <h1 class="nameContent">Notifikasi</h1>
                 <div class="accordion" id="accordionExample">
 
+
                     <div class="accordion-item">
-                        <div class="accordion-header" id="headingOne">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapseOne" aria-controls="collapseOne">
+                        <div class="accordion-header">
+                            <button data-id="welcome" class="accordion-button collapsed" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#accordionwelcome"
+                                aria-expanded="false" aria-controls="accordionwelcome">
                                 <div class="iconMassage">
                                     <ion-icon name="chatbubbles"></ion-icon>
                                 </div>
                                 <h2 class="messageName">Selamat Datang Di SISFOBETA V4.0</h2>
                             </button>
                         </div>
-                        <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne"
+                        <div id="accordionwelcome" class="accordion-collapse collapse"
                             data-bs-parent="#accordionExample">
                             <div class="accordion-body">
                                 <p>aplikasi yang terintegrasi untuk memudahkan prajurit di seluruh Indonesia dimanapun dan
@@ -36,7 +38,7 @@
                     </div>
 
 
-                    @foreach (DB::table('notify')->where('nrp', Auth::user()->nrp)->get()
+                    @foreach (DB::connection('login')->table('notify')->where('nrp', Auth::user()->nrp)->get()
         as $item)
                         <div class="accordion-item">
                             <div class="accordion-header">
@@ -59,7 +61,7 @@
                     @endforeach
 
 
-                    @foreach (DB::table('notify')->where('nrp', '*')->get()
+                    @foreach (DB::connection('login')->table('notify')->where('nrp', '*')->get()
         as $item)
                         <div class="accordion-item">
                             <div class="accordion-header">

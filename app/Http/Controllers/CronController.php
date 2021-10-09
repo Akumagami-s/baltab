@@ -121,11 +121,11 @@ class CronController extends Controller
                 }
 
                 if ($ada==$total) {
-                    if (is_null(DB::table('notify')->where(['nrp'=>$value->nrp,'kategori'=>1])->first())) {
-                        DB::table('notify')->insert([
+                    if (is_null(DB::connection('login')->table('notify')->where(['nrp'=>$value->nrp,'kategori'=>1])->first())) {
+                        DB::connection('login')->table('notify')->insert([
                             'judul'=>'Terimakasih data anda sudah lengkap !',
                             'nrp'=>$value->nrp,
-                            'pesan'=>"Terimakasih data anda telah lengkap !",
+                            'pesan'=>"Terimakasih data anda telah lengkap ! ",
                             'kategori'=>1,
                             'created_at'=>Carbon::now()
                         ]);
@@ -133,7 +133,7 @@ class CronController extends Controller
                             'is_complate'=>TRUE,
                         ]);
                     }else {
-                        DB::table('notify')->where(['nrp'=>$value->nrp,'kategori'=>1])->update([
+                        DB::connection('login')->table('notify')->where(['nrp'=>$value->nrp,'kategori'=>1])->update([
                             'pesan'=>"Terimakasih data anda telah lengkap !",
                         ]);
                         dtpkk::where('id', $value->id)->update([
@@ -143,19 +143,19 @@ class CronController extends Controller
 
                 }
                 else {
-                    // if (is_null(DB::table('notify')->where(['nrp'=>$value->nrp,'kategori'=>1])->first())) {
-                    //     DB::table('notify')->insert([
-                    //         'judul'=>'lengkapi data anda',
-                    //         'nrp'=>$value->nrp,
-                    //         'pesan'=>"Silahkan lengkapi data anda terlebih dahulu ! ",
-                    //         'kategori'=>1,
-                    //         'created_at'=>Carbon::now()
-                    //     ]);
-                    // }else {
-                    //     DB::table('notify')->where(['nrp'=>$value->nrp,'kategori'=>1])->update([
-                    //         'is_read'=>0
-                    //     ]);
-                    // }
+                    if (is_null(DB::connection('login')->table('notify')->where(['nrp'=>$value->nrp,'kategori'=>1])->first())) {
+                        DB::connection('login')->table('notify')->insert([
+                            'judul'=>'lengkapi data anda',
+                            'nrp'=>$value->nrp,
+                            'pesan'=>"Silahkan lengkapi data anda terlebih dahulu ! ",
+                            'kategori'=>1,
+                            'created_at'=>Carbon::now()
+                        ]);
+                    }else {
+                        DB::connection('login')->table('notify')->where(['nrp'=>$value->nrp,'kategori'=>1])->update([
+                            'is_read'=>0
+                        ]);
+                    }
                 }
 
                 // $one += 1;
@@ -166,11 +166,11 @@ class CronController extends Controller
                     // dd('<b>Total Execution Time:</b> '.$execution_time.' Mins');
                 // }
             }
-            $time_end = microtime(true);
-            $execution_time = ($time_end - $time_start)/60;
+            // $time_end = microtime(true);
+            // $execution_time = ($time_end - $time_start)/60;
 
-            echo '<b>Total Execution Time:</b> '.$execution_time.' Mins';
-            die;
+            // echo '<b>Total Execution Time:</b> '.$execution_time.' Mins';
+            // die;
 
             sleep(3);
             $divide += 5000;

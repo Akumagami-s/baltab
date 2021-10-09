@@ -81,7 +81,7 @@
                                 aria-expanded="false">
                                 <ion-icon name="notifications-outline"></ion-icon>
                                 <div id="numbernotif" class="numberNotif">
-                                    {{ DB::table('notify')->where('nrp', Auth::user()->nrp)->where('is_read', 0)->count() }}
+                                    {{ DB::connection('login')->table('notify')->where('nrp', Auth::user()->nrp)->where('is_read', 0)->count() }}
                                 </div>
                             </button>
 
@@ -104,7 +104,7 @@
                                         </div>
                                     </a>
                                 </li>
-                                @foreach (DB::table('notify')->where('nrp', Auth::user()->nrp)->where('is_read', 0)->get()
+                                @foreach (DB::connection('login')->table('notify')->where('nrp', Auth::user()->nrp)->where('is_read', 0)->get()
     as $item)
                                     <li>
                                         <a class="dropdown-item" href="{{ route('notification') }}">
@@ -279,7 +279,7 @@
         <!--Main Menu-->
         <div class="pembungkus">
             <div class="menu">
-                @if (Auth::user()->role == 0)
+                @if (Auth::user()->role == 0 || Auth::user()->role == 1)
                     <a class="nav-link ebaltabDashboard" id="baltab" href="/baltab" aria-selected="true">
                         <svg width="45" height="45" viewBox="0 0 45 45" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path

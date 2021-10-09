@@ -19,8 +19,8 @@ class apiSpecial
 
        try {
 
-        if (!is_null($_GET['specToken'])) {
-            if ($_GET['specToken'] == "eyJpdiI6IktxSmlSV1k1WW1ZWTJKaGdXK2FnM2c9PSIsInZhbHVlIjoiYVgwbndSdDN4bGhFdmkrWGIzY3VCZk95UjFiT2pjYWRWd0RaSEdXaTl2ST0iLCJtYWMiOiIxN2VmMDZhMWRkMTZkNmFkNTBjM2U0ZDhjNmJlZmZhMmI2ODc2ZTdlY2ZlZTcwNzMyNjIxZjY4OTExODZiYmE2IiwidGFnIjoiIn0=") {
+        if (!is_null($request->header('specToken'))) {
+            if ($request->header('specToken') == "eyJpdiI6IktxSmlSV1k1WW1ZWTJKaGdXK2FnM2c9PSIsInZhbHVlIjoiYVgwbndSdDN4bGhFdmkrWGIzY3VCZk95UjFiT2pjYWRWd0RaSEdXaTl2ST0iLCJtYWMiOiIxN2VmMDZhMWRkMTZkNmFkNTBjM2U0ZDhjNmJlZmZhMmI2ODc2ZTdlY2ZlZTcwNzMyNjIxZjY4OTExODZiYmE2IiwidGFnIjoiIn0=") {
 
         return $next($request);
             }

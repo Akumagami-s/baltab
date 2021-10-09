@@ -16,7 +16,6 @@ class ApiController extends Controller
         return response()->json($prajurit, 200);
     }
 
-
     public function dataLengkap()
     {
         $data = dtpkk::where(['is_pengajuan'=>FALSE,'is_pensiun'=>TRUE,'is_complate'=>TRUE])->paginate(100);
@@ -203,5 +202,12 @@ class ApiController extends Controller
         $hasil = app('App\Http\Controllers\HaveController')->index($nrp);
 
         return response()->json(['message'=>'Data tabugan','data'=>$hasil], 200);
+    }
+
+    public function specData($nrp)
+    {
+        $hasil =dtpkk::where('nrp',$nrp)->first();
+
+        return response()->json(['message'=>'Data Pokok Prajurit','data'=>$hasil], 200);
     }
 }

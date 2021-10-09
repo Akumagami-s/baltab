@@ -429,7 +429,8 @@ return DataTables::queryBuilder($query)
 ->editColumn('tg_lahir' ,function ($data){
     return date('d F Y', strtotime($data->tg_lahir));
 })
-->addColumn('nama', function ($data) {
+
+->addColumn('uraian_nama', function ($data) {
     return '<b>'.$data->nama.'</b><p>'.$data->nrp.'</p>';
 })
 ->addColumn('pangkat_uraian', function ($data) {
@@ -481,7 +482,7 @@ return DataTables::queryBuilder($query)
 
 
 
-})->rawColumns(['nama','action','pangkat_uraian','corp_uraian','kesatuan_uraian'])->addIndexColumn()->toJson();
+})->rawColumns(['uraian_nama','action','pangkat_uraian','corp_uraian','kesatuan_uraian'])->addIndexColumn()->toJson();
 
 // '<a href="/baltab/datapok?NRP='.$data->nrp.'" >'.$data->nama.'</a>'
 
@@ -865,6 +866,7 @@ return DataTables::queryBuilder($query)
 
 
 })
+
 ->addColumn('nama', function ($data) {
     return '<b>'.$data->atas_nama.'</b><p>'.dtpkk::where('_id',$data->datapokok_id)->first()->nrp.'</p>';
 })

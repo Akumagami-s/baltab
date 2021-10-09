@@ -1,3 +1,4 @@
+
 @if (empty($data->uang->original['message']))
 {{-- @dump($status) --}}
 {{-- @dump($status['ada'],$status['kelengkapan']) --}}

@@ -45,7 +45,11 @@ class HaveController extends Controller
         if (is_null($user)) {
             return response()->json(['message'=>'user tidak ditemukan'], 200);
         }else if(is_null($user->tmt_henti)){
-            $user->tmt_henti = date("Y-m-d");
+            if (is_null($user->tgl_pensiun)) {
+                $user->tmt_henti = date("Y-m-d");
+            }else {
+                $user->tmt_henti = $User->tgl_pensiun;
+            }
             // return response()->json(['message'=>'TMT henti tidak didefinisikan'], 200);
         }
         // dd($user->tmt_henti);
@@ -76,13 +80,11 @@ class HaveController extends Controller
         // dd($bunga_list);
 
 
-try {
-    $dt1 = explode("-", $tmtrange[0]);
-    $dat1 = $dt1[0]."-".$dt1[1]."-01";
-
-    $dt2 = explode("-", $user->tmt_henti);
-
-    $akh = $dt2[1]+1;
+        try {
+        $dt1 = explode("-", $tmtrange[0]);
+        $dat1 = $dt1[0]."-".$dt1[1]."-01";
+        $dt2 = explode("-", $user->tmt_henti);
+        $akh = $dt2[1]+1;
 
     // dd($akh);
     if (strlen($akh) != 2) {
@@ -234,10 +236,10 @@ try {
     {
 
 
-        DB::table('notify')->where('id',$request->notif_id)->update([
+        DB::connection('login')->table('notify')->where('id',$request->notif_id)->update([
             'is_read'=>1
         ]);
-        return response()->json(['count'=>DB::table('notify')->where('nrp', Auth::user()->nrp)->where('is_read',0)->count()], 200);
+        return response()->json(['count'=>DB::connection('login')->table('notify')->where('nrp', Auth::user()->nrp)->where('is_read',0)->count()], 200);
     }
 
 
@@ -251,13 +253,15 @@ try {
 
 
         if (is_null($user)) {
-            return redirect()->back()->with(['message'=>'user tidak ditemukan']);
-            // return response()->json(['message'=>'user tidak ditemukan'], 200);
+            return response()->json(['message'=>'user tidak ditemukan'], 200);
         }else if(is_null($user->tmt_henti)){
-            return redirect()->back()->with(['message'=>'TMT HENTI tidak ditemukan']);
+            if (is_null($user->tgl_pensiun)) {
+                $user->tmt_henti = date("Y-m-d");
+            }else {
+                $user->tmt_henti = $User->tgl_pensiun;
+            }
+            // return response()->json(['message'=>'TMT henti tidak didefinisikan'], 200);
         }
-
-
         $tmt_1 = $user->tmt_1 == '000000' ? '' : $user->tmt_1;
         $tmt_2 = $user->tmt_2 == '000000' ? '' : $user->tmt_2;
         $tmt_3 = $user->tmt_3 == '000000' ? '' : $user->tmt_3;
@@ -545,12 +549,12 @@ try {
     public function postMessage(Request $request)
     {
         if ($request->type == "*") {
-            DB::table('notify')->insert([
+            DB::connection('login')->table('notify')->insert([
                 'nrp'=>'*',
                 'pesan'=>$request->pesan,
                 'judul'=>$request->judul,
-                'kategori'=>'0',
-
+                'kategori'=>0,
+                'from_app'=>1,
             ]);
 
             return redirect()->back()->with(['message'=>"sudah di broadcast"]);
@@ -559,12 +563,12 @@ try {
             $ds = explode(',',$request->nrplist);
             foreach ($ds as $key => $value) {
                 if ($key != count($ds) - 1) {
-                    DB::table('notify')->insert([
+                    DB::connection('login')->table('notify')->insert([
                         'nrp'=>$value,
                         'pesan'=>$request->pesan,
                         'judul'=>$request->judul,
-                        'kategori'=>'0',
-
+                        'kategori'=>0,
+                        'from_app'=>1,
                     ]);
                 }
             }

@@ -25,6 +25,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::middleware(['apiSpecial'])->group(function () {
 
 Route::get('/dataPokok', [ApiController::class,'datapokok'])->name('datapokok');
+Route::get('/dataPokok/{nrp}', [ApiController::class,'specData'])->name('specData');
 Route::get('/dataLengkap', [ApiController::class,'dataLengkap'])->name('dataLengkap');
 Route::get('/dataTidakLengkap', [ApiController::class,'dataTidakLengkap'])->name('dataTidakLengkap');
 Route::get('/pengajuan', [ApiController::class,'pengajuan'])->name('pengajuan');

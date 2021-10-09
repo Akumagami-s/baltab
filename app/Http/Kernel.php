@@ -60,6 +60,7 @@ class Kernel extends HttpKernel
         'auth' => \App\Http\Middleware\Authenticate::class,
         'logoutus' => \App\Http\Middleware\logoutus::class,
         'apiSpecial' => \App\Http\Middleware\apiSpecial::class,
+        'isAdmin' => \App\Http\Middleware\isAdmin::class,
         'ssocheck' => \App\Http\Middleware\ssocheck::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,

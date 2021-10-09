@@ -216,20 +216,20 @@
                     },
 
 
-
                     {
                         data: 'nama',
-                        name: 'nama',
+                        name: 'atas_nama',
                         defaultContent: "<i class='text-danger'>null</i>",
-                        className: 'narekPem',
+                        className: 'atas_nama',
                         visible: true,
                         searchable: true
                     },
+
                     {
                         data: 'namabank',
-                        name: 'namabank',
+                        name: 'nama_bank',
                         defaultContent: "<i class='text-danger'>null</i>",
-                        className: 'nabankPem',
+                        className: 'nama_bank',
                         visible: true,
                         searchable: true,
                         orderable:true
@@ -238,7 +238,7 @@
                         data: 'jumlah_tabungan',
                         name: 'jumlah_tabungan',
                         defaultContent: "<i class='text-danger'>null</i>",
-                        className: 'jumlah_tabunganPem',
+                        className: 'jumlah_tabungan',
                         visible: true,
                         searchable: true,
                         orderable:true
@@ -289,7 +289,7 @@
                     },
                     {
                         data: 'nama',
-                        name: 'nama',
+                        name: 'atas_nama',
                         defaultContent: "<i class='text-danger'>null</i>",
                         className: 'atas_nama',
                         visible: true,
@@ -297,9 +297,9 @@
                     },
                     {
                         data: 'namabank',
-                        name: 'namabank',
+                        name: 'nama_bank',
                         defaultContent: "<i class='text-danger'>null</i>",
-                        className: 'namabank',
+                        className: 'nama_bank',
                         visible: true
                     },
 
